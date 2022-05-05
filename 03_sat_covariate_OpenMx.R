@@ -293,10 +293,10 @@ twin.data <- readRDS("QTAB_familywise.RDS")
 Saturated_covariate(phenotype = "ProcSpeed_rawZ", twin.data = twin.data)
 
 # Run for list of phenotypes
-variable_list <- c("ProcSpeed_rawZ", "CJOLOZ")
+variable_list <- c("ProcSpeed_rawZ", "CJOLOZ", "TotalComposite_agecorr_stanZ")
 results.sat <- lapply(variable_list, Saturated_covariate, twin.data = twin.data) %>% bind_rows()
 
-# Assumption testing
+# Assumption testing (sig after FDR adjustment)
 results.sat$H1m_pval_fdr <- p.adjust(p = results.sat$H1m_pval, method = "fdr")
 results.sat$H2m_pval_fdr <- p.adjust(p = results.sat$H2m_pval, method = "fdr")
 results.sat$H3m_pval_fdr <- p.adjust(p = results.sat$H3m_pval, method = "fdr")
@@ -323,7 +323,7 @@ select(results.sat %>% filter(H4v_pval_fdr < 0.05), c(Variable, H4v_pval_fdr, H4
 select(results.sat %>% filter(H1c_pval_fdr < 0.05), c(Variable, H1c_pval_fdr, H1c_pval))
 select(results.sat %>% filter(H2c_pval_fdr < 0.05), c(Variable, H2c_pval_fdr, H2c_pval))
 
-# Covariate effects (after sig fdr adjustment)
+# Covariate effects (sig after FDR adjustment)
 results.sat$NoSex_pval_fdr <- p.adjust(p = results.sat$NoSex_pval, method = "fdr")
 results.sat$NoAge_pval_fdr <- p.adjust(p = results.sat$NoAge_pval, method = "fdr")
 

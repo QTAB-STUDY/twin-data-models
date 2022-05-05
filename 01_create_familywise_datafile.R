@@ -34,6 +34,7 @@ qtab.data[which(qtab.data$family_id=="fam-0217"), c("participant_id", "birth_ord
 # Z-score (Useful for OpenMx)
 qtab.data$ProcSpeed_rawZ <- scale(qtab.data$ProcSpeed_raw)
 qtab.data$CJOLOZ <- scale(qtab.data$CJOLO)
+qtab.data$TotalComposite_agecorr_stanZ <- scale(qtab.data$TotalComposite_agecorr_stan)
 
 # Reshape from long to wide
 famData <- reshape(qtab.data, timevar = "indID", idvar = "family_id", direction = "wide", sep = "_0") 
