@@ -7,14 +7,14 @@
 # ###############################
 
 rm(list = ls())
-setwd("/qtab/twin-data-models")
+setwd("~/GitHub/twin-data-models")
 
 #### Load libraries ####
 library(OpenMx)
 library(stringr)
 library(dplyr)
 source("miFunctions.R")
-mxOption(NULL, "Default optimizer", "CSOLNP") # NPSOL SLSQP CSOLNP
+mxOption(NULL, "Default optimizer", "SLSQP") # NPSOL SLSQP CSOLNP
 
 #### Models ####
 Saturated_covariate <- function(phenotype, twin.data) {

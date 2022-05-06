@@ -1,4 +1,4 @@
-setwd("/qtab/twin-data-models")
+setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
 # Load libraries

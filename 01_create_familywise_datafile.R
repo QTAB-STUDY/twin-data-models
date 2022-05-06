@@ -7,7 +7,7 @@ library(tidyverse)
 
 # Setup datafile
 qtab.participants <- read.table("/qtab/participants.tsv", sep = "\t", header = T, na.strings = "n/a")
-ses01.cog <- read.table("/qtab/phenotype/2_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses01.cog <- read.table("/qtab/phenotype/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
 qtab.data <- left_join(qtab.participants, ses01.cog, "participant_id")
 # Recode sex from M/F to 0/1
 qtab.data <- qtab.data %>% mutate(sex_female = if_else(sex=="F", 1, 0))
