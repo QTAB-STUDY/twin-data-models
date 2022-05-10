@@ -28,6 +28,5 @@ summary(mod3)
 
 #### Compare models with different covariates ####
 mod4 <- lmer(ProcSpeed_raw ~ age_months + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
-mod5 <- lmer(ProcSpeed_raw ~ sex_female + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
-mod6 <- lmer(ProcSpeed_raw ~ age_months + sex_female + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
-compare_performance(mod4, mod5, mod6)
+mod5 <- lmer(ProcSpeed_raw ~ age_months + sex_female + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
+compare_performance(mod4, mod5)
