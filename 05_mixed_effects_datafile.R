@@ -1,7 +1,7 @@
 #### Notes ####
 # Author Lachlan T Strike
 # Example code for running linear mixed effects models on QTAB data (OpenNeuro DOI)
-# Code is provided as a example/starting point. It should not be interpreted as the best practice/approach
+# Code is provided as a example/starting point. It should not be considered the best practice/approach
 
 #### Setup ####
 library(lmerTest)
@@ -11,7 +11,7 @@ setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
 #### Create long datafile ####
-qtab.data <- read.table("/qtab/participants.tsv", sep = "\t", header = T, na.strings = "n/a")
+qtab.data <- read.table("C:/Documents and Settings/uqlstri1/OneDrive - The University of Queensland/3_Papers/03_scientific_data/02_data/01_demographics/participants.tsv", sep = "\t", header = T, na.strings = "n/a")
 # Recode sex from M/F to 0/1
 qtab.data <- qtab.data %>% mutate(sex_female = if_else(sex=="F", 1, 0))
 head(qtab.data %>% select(sex, sex_female))
@@ -61,39 +61,20 @@ qtab.data[which(qtab.data$family_id %in% qtab.fams.DZ  & !is.na(qtab.data$zyg)),
 
 head(qtab.data[, c("participant_id", "family_id", "zyg", "indID", "M", "Pair")], n = 30)
 
-ses01.cog <- read.table("/qtab/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses01.cog <- read.table("C:/Documents and Settings/uqlstri1/OneDrive - The University of Queensland/3_Papers/03_scientific_data/02_data/08_phenotypes/phenotype/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
 ses01.cog <- left_join(qtab.data, ses01.cog, "participant_id")
 ses01.cog <- ses01.cog %>% rename(age_months = ses01_age_months)
 
-ses02.cog <- read.table("/qtab/02_cognition_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses02.cog <- read.table("C:/Documents and Settings/uqlstri1/OneDrive - The University of Queensland/3_Papers/03_scientific_data/02_data/08_phenotypes/phenotype/02_cognition_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
 ses02.cog <- left_join(qtab.data, ses02.cog, "participant_id")
 ses02.cog <- ses02.cog %>% rename(age_months = ses02_age_months)
 
-ses01.cog <- ses01.cog %>% select(participant_id, ProcSpeed_raw, sex_female, age_months, indID, Pair, M)
-ses02.cog <- ses02.cog %>% select(participant_id, ProcSpeed_raw, sex_female, age_months, indID, Pair, M)
+ses01.cog <- ses01.cog %>% select(participant_id, ProcSpeed_raw, CrystallizedComposite_uncorr_stan, sex_female, age_months, indID, Pair, M)
+ses02.cog <- ses02.cog %>% select(participant_id, ProcSpeed_raw, CrystallizedComposite_uncorr_stan, sex_female, age_months, indID, Pair, M)
 
 ses01.cog$session <- 1
 ses02.cog$session <- 2
 
 ses01.02 <- rbind(ses01.cog, ses02.cog)
 
-ses01.02.unrelated <- ses01.02 %>% filter(indID==1)
-ses01 <- ses01.02 %>% filter(session==1)
-
-#### Model controlling for repeat observations & relatedness ####
-mod1 <- lmer(ProcSpeed_raw ~ age_months + sex_female + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
-summary(mod1)
-
-#### Model controlling for repeat observations only (i.e. if using unrelated dataset) ####
-mod2 <- lmer(ProcSpeed_raw ~ age_months + sex_female + (1 | participant_id), REML = FALSE, data = ses01.02.unrelated)
-summary(mod2)
-
-#### Model controlling for relatedness only (i.e. not using multi-session data ####
-mod3 <- lmer(ProcSpeed_raw ~ age_months + sex_female + (1 | Pair) + (1 | M), REML = FALSE, data = ses01)
-summary(mod3)
-
-#### Compare models with different covariates ####
-mod4 <- lmer(ProcSpeed_raw ~ age_months + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
-mod5 <- lmer(ProcSpeed_raw ~ sex_female + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
-mod6 <- lmer(ProcSpeed_raw ~ age_months + sex_female + (1 | participant_id) + (1 | Pair) + (1 | M), REML = FALSE, data = ses01.02)
-compare_performance(mod4, mod5, mod6)
+saveRDS(ses01.02, "QTAB_mixed_effects_datafile.RDS")
