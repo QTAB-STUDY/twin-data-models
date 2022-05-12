@@ -1,4 +1,4 @@
-setwd("/qtab/twin-data-models")
+setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
 # Load libraries
@@ -6,8 +6,8 @@ library(umx)
 library(tidyverse)
 
 # Setup datafile
-qtab.participants <- read.table("/qtab/participants.tsv", sep = "\t", header = T, na.strings = "n/a")
-ses01.cog <- read.table("/qtab/phenotype/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
+qtab.participants <- read.table("participants.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses01.cog <- read.table("02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
 qtab.data <- left_join(qtab.participants, ses01.cog, "participant_id")
 # Recode sex from M/F to 0/1
 qtab.data <- qtab.data %>% mutate(sex_female = if_else(sex=="F", 1, 0))
@@ -31,10 +31,10 @@ qtab.data[which(qtab.data$family_id=="fam-0085"), c("participant_id", "birth_ord
 qtab.data[which(qtab.data$family_id=="fam-0210"), c("participant_id", "birth_order", "indID")]
 qtab.data[which(qtab.data$family_id=="fam-0217"), c("participant_id", "birth_order", "indID")]
 
-# Z-score (Useful for OpenMx)
-qtab.data$ProcSpeed_rawZ <- scale(qtab.data$ProcSpeed_raw)
-qtab.data$CJOLOZ <- scale(qtab.data$CJOLO)
-qtab.data$TotalComposite_agecorr_stanZ <- scale(qtab.data$TotalComposite_agecorr_stan)
+# Z-score (Useful for OpenMx model convergence)
+qtab.data$ProcSpeed_rawZ <- as.numeric(scale(qtab.data$ProcSpeed_raw))
+qtab.data$CJOLOZ <- as.numeric(scale(qtab.data$CJOLO))
+qtab.data$TotalComposite_agecorr_stanZ <- as.numeric(scale(qtab.data$TotalComposite_agecorr_stan))
 
 # Reshape from long to wide
 famData <- reshape(qtab.data, timevar = "indID", idvar = "family_id", direction = "wide", sep = "_0") 

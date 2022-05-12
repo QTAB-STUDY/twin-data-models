@@ -9,7 +9,7 @@ setwd("~/GitHub/twin-data-models")
 library(OpenMx)
 library(dplyr)
 source("miFunctions.R")
-mxOption(NULL, "Default optimizer", "SLSQP") # NPSOL SLSQP CSOLNP
+mxOption(NULL, "Default optimizer", "CSOLNP") # NPSOL SLSQP CSOLNP
 
 #### Models ####
 Univariate_path_covariate <- function(phenotype, twin.data) {
@@ -125,7 +125,8 @@ Univariate_path_covariate <- function(phenotype, twin.data) {
   # ------------------------------------------------------------------------------
   CholAceFit <- mxTryHard(CholAceModel, intervals = T, extraTries = 50)
   CholAceSum <- summary(CholAceFit)
-
+  CholAceSum
+  
   # Run AE model
   CholAeModel <- CholAceModel
   CholAeModel <- mxModel(CholAceModel, name = "CholAE")
@@ -211,7 +212,9 @@ Univariate_path_covariate <- function(phenotype, twin.data) {
 mydata <- readRDS("QTAB_familywise.RDS")
 
 # Run for single phenotype
-Univariate_path_covariate(phenotype = "ProcSpeed_rawZ", twin.data = mydata)
+Univariate_path_covariate(phenotype = "ProcSpeed_raw", twin.data = mydata)
+# OpenMx A/C/E  0.23/0.23/0.54
+# umx A/C/E 0.24/0.23/0.54
 
 # Run for list of phenotypes
 variable_list <- c("ProcSpeed_rawZ", "CJOLOZ", "TotalComposite_agecorr_stanZ")
