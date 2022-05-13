@@ -2,7 +2,6 @@ setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
 # Load libraries
-library(umx)
 library(tidyverse)
 
 # Setup datafile
