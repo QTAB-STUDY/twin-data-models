@@ -263,9 +263,9 @@ Saturated_covariate <- function(phenotype, twin.data) {
     rDZ = CModel2Fit$DZF$expCorDZF$result[2, 1],
     rMZ_95CI = paste0(sprintf("%.2f", round(CModel2Summ$CI$estimate[1], 2)), " (", sprintf("%.2f", round(CModel2Summ$CI$lbound[1], 2)), ", ", sprintf("%.2f", round(CModel2Summ$CI$ubound[1], 2)), ")"),
     rDZ_95CI = paste0(sprintf("%.2f", round(CModel2Summ$CI$estimate[2], 2)), " (", sprintf("%.2f", round(CModel2Summ$CI$lbound[2], 2)), ", ", sprintf("%.2f", round(CModel2Summ$CI$ubound[2], 2)), ")"),
-    sexEstimate = CModel2Summ$parameters$Estimate[2],
+    sex_femaleEstimate = CModel2Summ$parameters$Estimate[2],
     ageEstimate = CModel2Summ$parameters$Estimate[3],
-    NoSex_pval = noSexLRT$p[2],
+    NoSexFemale_pval = noSexLRT$p[2],
     NoAge_pval = noAgeLRT$p[2],
     AIC_Sat = twinSatSumm$AIC.Mx,
     CODE_Sat = twinSatFit$output$status$code,
@@ -287,14 +287,18 @@ Saturated_covariate <- function(phenotype, twin.data) {
 }
 
 #### Run models ####
-twin.data <- readRDS("QTAB_familywise.RDS")
+twin.data <- readRDS("QTAB_familywise_ses01.RDS")
 
 # Run for single phenotype
-Saturated_covariate(phenotype = "ProcSpeed_rawZ", twin.data = twin.data)
+Saturated_covariate(phenotype = "kJwithDFZ", twin.data = twin.data)
 
 # Run for list of phenotypes
-variable_list <- c("ProcSpeed_rawZ", "CJOLOZ", "TotalComposite_agecorr_stanZ")
-results.sat <- lapply(variable_list, Saturated_covariate, twin.data = twin.data) %>% bind_rows()
+variable_list <- c("ProcSpeed_rawZ", "CJOLOZ", "FAS_60Z", "DSfZ", "SCAS_scoreZ", 
+                   "SMFQ_scoreZ", "SPHERE_anxdep_scoreZ", "SPHERE_fat_scoreZ",
+                   "CRSQ_rum_scoreZ", "CASQ_comp_scoreZ", "MSPSS_scoreZ", "DLSS_scoreZ",
+                   "GBSvictim_scoreZ", "PDSS_scoreZ", "pPRMQ_scoreZ", "pSCAS_scoreZ",
+                   "pSMFQ_scoreZ", "pSDQ_total_scoreZ", "pEATQ_act_scoreZ", "kJwithDFZ")
+results.sat <- as_tibble(lapply(variable_list, Saturated_covariate, twin.data = twin.data) %>% bind_rows())
 
 # Assumption testing (sig after FDR adjustment)
 results.sat$H1m_pval_fdr <- p.adjust(p = results.sat$H1m_pval, method = "fdr")
@@ -324,11 +328,11 @@ select(results.sat %>% filter(H1c_pval_fdr < 0.05), c(Variable, H1c_pval_fdr, H1
 select(results.sat %>% filter(H2c_pval_fdr < 0.05), c(Variable, H2c_pval_fdr, H2c_pval))
 
 # Covariate effects (sig after FDR adjustment)
-results.sat$NoSex_pval_fdr <- p.adjust(p = results.sat$NoSex_pval, method = "fdr")
+results.sat$NoSexFemale_pval_fdr <- p.adjust(p = results.sat$NoSexFemale_pval, method = "fdr")
 results.sat$NoAge_pval_fdr <- p.adjust(p = results.sat$NoAge_pval, method = "fdr")
 
-select(results.sat %>% filter(NoSex_pval_fdr < 0.05), c(Variable, NoSex_pval_fdr, sexEstimate))
-select(results.sat %>% filter(NoAge_pval_fdr < 0.05), c(Variable, NoAge_pval_fdr, ageEstimate))
+select(results.sat %>% filter(NoSexFemale_pval_fdr < 0.05), c(Variable, sex_femaleEstimate, NoSexFemale_pval_fdr))
+select(results.sat %>% filter(NoAge_pval_fdr < 0.05), c(Variable, ageEstimate, NoAge_pval_fdr))
 
 results.sat$Mean_SD <- paste0(sprintf("%.2f", round(results.sat$Mean, 2)), " (", sprintf("%.2f", round(results.sat$SD, 2)), ")")
 write.csv(results.sat, "03_sat_covariate_OpenMX_results.csv", row.names = F)
