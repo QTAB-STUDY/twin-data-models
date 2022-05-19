@@ -1,4 +1,4 @@
-# twin-data-models
+# QTAB Twin Data Models
 Example models for analysing twin data
 
 ## 01_create_familywise_datafile.R
