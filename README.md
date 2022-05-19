@@ -12,3 +12,6 @@ Example code for assumption testing, estimating twin correlations, examining cov
 
 ## 04a_uni_path_covariate_OpenMx.R
 Example function  for univariate twin analyses (using OpenMx).
+
+## 04b_table_plots.R
+Example code to estimate variance components (using function 04a_uni_path_covariate_OpenMx) and display estimates as a table and figure. 
