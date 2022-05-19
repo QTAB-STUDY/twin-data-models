@@ -1,5 +1,5 @@
 # QTAB Twin Data Models
-Example models for analysing twin data
+Example models for analysing the QTAB dataset
 
 ## 01_create_familywise_datafile.R
 Example code to create a familywise dataset (i.e. one family per row) for use in OpenMx.
