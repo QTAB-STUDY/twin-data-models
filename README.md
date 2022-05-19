@@ -6,3 +6,6 @@ Example code to create a familywise dataset (i.e. one family per row) for use in
 
 ## 02_umx.R
 Example code for running twin models using umx (a simplified version of OpenMx).
+
+## 03_sat_covariate_OpenMx.R
+Example code for assumption testing, estimating twin correlations, examining covariate effects (using OpenMx).
