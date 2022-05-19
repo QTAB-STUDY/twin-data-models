@@ -1,7 +1,7 @@
 #### Notes ####
-# Author Lachlan T Strike
-# Example code for running linear mixed effects models on QTAB data (OpenNeuro DOI)
-# Code is provided as a example/starting point. It should not be considered the best practice/approach
+# Author: Lachlan T Strike
+# Example code for running linear mixed effects models on QTAB data (https://doi.org/10.18112/openneuro.ds004069.v1.0.1)
+# Code is provided as a example/starting point (may contain errors). It should not be considered the best practice/approach!!!
 
 #### Setup ####
 library(lmerTest)
@@ -11,7 +11,7 @@ setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
 #### Create long datafile ####
-qtab.data <- read.table("C:/Documents and Settings/uqlstri1/OneDrive - The University of Queensland/3_Papers/03_scientific_data/02_data/01_demographics/participants.tsv", sep = "\t", header = T, na.strings = "n/a")
+qtab.data <- read.table("participants.tsv", sep = "\t", header = T, na.strings = "n/a")
 # Recode sex from M/F to 0/1
 qtab.data <- qtab.data %>% mutate(sex_female = if_else(sex=="F", 1, 0))
 head(qtab.data %>% select(sex, sex_female))
@@ -61,20 +61,20 @@ qtab.data[which(qtab.data$family_id %in% qtab.fams.DZ  & !is.na(qtab.data$zyg)),
 
 head(qtab.data[, c("participant_id", "family_id", "zyg", "indID", "M", "Pair")], n = 30)
 
-ses01.cog <- read.table("C:/Documents and Settings/uqlstri1/OneDrive - The University of Queensland/3_Papers/03_scientific_data/02_data/08_phenotypes/phenotype/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
-ses01.cog <- left_join(qtab.data, ses01.cog, "participant_id")
-ses01.cog <- ses01.cog %>% rename(age_months = ses01_age_months)
+ses01.anx.dep <- read.table("phenotype/03_anxiety_depression_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses01.anx.dep <- left_join(qtab.data, ses01.anx.dep, "participant_id")
+ses01.anx.dep <- ses01.anx.dep %>% rename(age_months = ses01_age_months)
 
-ses02.cog <- read.table("C:/Documents and Settings/uqlstri1/OneDrive - The University of Queensland/3_Papers/03_scientific_data/02_data/08_phenotypes/phenotype/02_cognition_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
-ses02.cog <- left_join(qtab.data, ses02.cog, "participant_id")
-ses02.cog <- ses02.cog %>% rename(age_months = ses02_age_months)
+ses02.anx.dep <- read.table("phenotype/03_anxiety_depression_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses02.anx.dep <- left_join(qtab.data, ses02.anx.dep, "participant_id")
+ses02.anx.dep <- ses02.anx.dep %>% rename(age_months = ses01_age_months)
 
-ses01.cog <- ses01.cog %>% select(participant_id, ProcSpeed_raw, CrystallizedComposite_uncorr_stan, sex_female, age_months, indID, Pair, M)
-ses02.cog <- ses02.cog %>% select(participant_id, ProcSpeed_raw, CrystallizedComposite_uncorr_stan, sex_female, age_months, indID, Pair, M)
+ses01.anx.dep <- ses01.anx.dep %>% select(participant_id, SPHERE_anxdep_score, SPHERE_fat_score, SCAS_score, age_months, indID, Pair, M, sex_female)
+ses02.anx.dep <- ses02.anx.dep %>% select(participant_id, SPHERE_anxdep_score, SPHERE_fat_score, SCAS_score, age_months, indID, Pair, M, sex_female)
 
-ses01.cog$session <- 1
-ses02.cog$session <- 2
+ses01.anx.dep$session <- 1
+ses02.anx.dep$session <- 2
+ses01.02 <- rbind(ses01.anx.dep, ses02.anx.dep)
 
-ses01.02 <- rbind(ses01.cog, ses02.cog)
-
+ses01.02 <- ses01.02 %>% arrange(participant_id)
 saveRDS(ses01.02, "QTAB_mixed_effects_datafile.RDS")
