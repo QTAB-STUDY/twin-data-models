@@ -1,6 +1,8 @@
 #### Notes ####
 # Author: Lachlan T Strike
-# Example code for running linear mixed effects models on QTAB data (https://doi.org/10.18112/openneuro.ds004069.v1.0.1)
+# Example code for running linear mixed effects models on QTAB data:
+# Strike, L. T. et al. QTAB Non-Imaging Phenotypes. UQ eSpace https://doi.org/10.48610/ec1585d (2022).
+# Strike, L. T. et al. Queensland Twin Adolescent Brain (QTAB). OpenNeuro (2022).
 # Code is provided as a example/starting point (may contain errors). It should not be considered the best practice/approach!!!
 
 #### Setup ####

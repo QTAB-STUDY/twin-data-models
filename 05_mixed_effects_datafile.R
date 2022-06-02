@@ -1,6 +1,8 @@
 #### Notes ####
 # Author: Lachlan T Strike
-# Example code for running linear mixed effects models on QTAB data (https://doi.org/10.18112/openneuro.ds004069.v1.0.1)
+# Example code for running linear mixed effects models on QTAB data:
+# Strike, L. T. et al. QTAB Non-Imaging Phenotypes. UQ eSpace https://doi.org/10.48610/ec1585d (2022).
+# Strike, L. T. et al. Queensland Twin Adolescent Brain (QTAB). OpenNeuro (2022).
 # Code is provided as a example/starting point (may contain errors). It should not be considered the best practice/approach!!!
 
 #### Setup ####
@@ -11,7 +13,7 @@ setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
 #### Create long datafile ####
-qtab.data <- read.table("phenotype/participants_restricted.tsv", sep = "\t", header = T, na.strings = "n/a") # Should be 422!!!!!!!!!!!!!
+qtab.data <- read.table("phenotype/participants_restricted.tsv", sep = "\t", header = T, na.strings = "n/a")
 # Recode sex from M/F to 0/1
 qtab.data <- qtab.data %>% mutate(sex_female = if_else(sex=="F", 1, 0))
 head(qtab.data %>% select(sex, sex_female))
