@@ -11,7 +11,7 @@ setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
 #### Create long datafile ####
-qtab.data <- read.table("participants.tsv", sep = "\t", header = T, na.strings = "n/a")
+qtab.data <- read.table("phenotype/participants_restricted.tsv", sep = "\t", header = T, na.strings = "n/a") # Should be 422!!!!!!!!!!!!!
 # Recode sex from M/F to 0/1
 qtab.data <- qtab.data %>% mutate(sex_female = if_else(sex=="F", 1, 0))
 head(qtab.data %>% select(sex, sex_female))
@@ -61,20 +61,20 @@ qtab.data[which(qtab.data$family_id %in% qtab.fams.DZ  & !is.na(qtab.data$zyg)),
 
 head(qtab.data[, c("participant_id", "family_id", "zyg", "indID", "M", "Pair")], n = 30)
 
-ses01.anx.dep <- read.table("phenotype/03_anxiety_depression_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
-ses01.anx.dep <- left_join(qtab.data, ses01.anx.dep, "participant_id")
-ses01.anx.dep <- ses01.anx.dep %>% rename(age_months = ses01_age_months)
+ses01.cognition <- read.table("phenotype/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses01.cognition <- left_join(qtab.data, ses01.cognition, "participant_id")
+ses01.cognition <- ses01.cognition %>% rename(age_months = ses01_age_months)
 
-ses02.anx.dep <- read.table("phenotype/03_anxiety_depression_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
-ses02.anx.dep <- left_join(qtab.data, ses02.anx.dep, "participant_id")
-ses02.anx.dep <- ses02.anx.dep %>% rename(age_months = ses01_age_months)
+ses02.cognition <- read.table("phenotype/02_cognition_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses02.cognition <- left_join(qtab.data, ses02.cognition, "participant_id")
+ses02.cognition <- ses02.cognition %>% rename(age_months = ses02_age_months)
 
-ses01.anx.dep <- ses01.anx.dep %>% select(participant_id, SPHERE_anxdep_score, SPHERE_fat_score, SCAS_score, age_months, indID, Pair, M, sex_female)
-ses02.anx.dep <- ses02.anx.dep %>% select(participant_id, SPHERE_anxdep_score, SPHERE_fat_score, SCAS_score, age_months, indID, Pair, M, sex_female)
+ses01.cognition <- ses01.cognition %>% select(participant_id, ProcSpeed_raw, age_months, indID, Pair, M, sex_female)
+ses02.cognition <- ses02.cognition %>% select(participant_id, ProcSpeed_raw, age_months, indID, Pair, M, sex_female)
 
-ses01.anx.dep$session <- 1
-ses02.anx.dep$session <- 2
-ses01.02 <- rbind(ses01.anx.dep, ses02.anx.dep)
+ses01.cognition$session <- 1
+ses02.cognition$session <- 2
+ses01.02 <- rbind(ses01.cognition, ses02.cognition)
 
 ses01.02 <- ses01.02 %>% arrange(participant_id)
 saveRDS(ses01.02, "QTAB_mixed_effects_datafile.RDS")
