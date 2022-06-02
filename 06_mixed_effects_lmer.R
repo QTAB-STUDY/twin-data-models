@@ -7,8 +7,6 @@
 library(lmerTest)
 library(tidyverse)
 library(performance)
-library(viridis)
-library(scales)
 setwd("~/GitHub/twin-data-models")
 rm(list = ls())
 
@@ -35,6 +33,9 @@ mod6 <- lmer(ProcSpeed_raw ~ age_months * sex_female + (1 | participant_id) + (1
 compare_performance(mod4, mod5, mod6)
 
 #### Plot ####
+library(viridis)
+library(scales)
+
 theme_lachlan <- function() {
   theme_minimal(base_size = 12) +
     theme(
@@ -61,9 +62,9 @@ g1 <- ggplot(data = ses01.02, aes(x = age_months, y = ProcSpeed_raw, color = sex
   geom_point(size = 1) + 
   xlab("Age (months)") +
   ylab("Processing speed (raw)") +
-  ggtitle("QTAB Processing Speed Session 1-2") + 
-  geom_line(size = 0.75, aes(group = participant_id)) +
-  theme_lachlan() + 
+  ggtitle("QTAB Processing Speed") + 
+  geom_line(size = 0.5, aes(group = participant_id)) +
+  theme_lachlan() +
   colScale
   
-g1
+g1 
