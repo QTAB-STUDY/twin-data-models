@@ -5,7 +5,7 @@ rm(list = ls())
 library(tidyverse)
 
 #### Setup participants datafile ####
-qtab.participants <- read_delim("participants.tsv", delim = "\t",  na = "n/a")
+qtab.participants <- read_delim("participants_restricted.tsv", delim = "\t",  na = "n/a")
 # Recode sex from M/F to sex_female 0/1
 qtab.participants <- qtab.participants %>% mutate(sex_female = if_else(sex=="F", 1, 0))
 head(qtab.participants %>% select(sex, sex_female))
