@@ -9,7 +9,7 @@
 library(lmerTest)
 library(tidyverse)
 library(performance)
-setwd("~/GitHub/twin-data-models")
+setwd("C:/GitHub/twin-data-models")
 rm(list = ls())
 
 ses01.02 <- readRDS("QTAB_mixed_effects_datafile.RDS")

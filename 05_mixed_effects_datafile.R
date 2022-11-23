@@ -9,11 +9,11 @@
 library(lmerTest)
 library(tidyverse)
 library(performance)
-setwd("~/GitHub/twin-data-models")
+setwd("C:/GitHub/twin-data-models")
 rm(list = ls())
 
 #### Create long datafile ####
-qtab.data <- read.table("phenotype/participants_restricted.tsv", sep = "\t", header = T, na.strings = "n/a")
+qtab.data <- read.table("non-imaging_phenotypes/participants_restricted.tsv", sep = "\t", header = T, na.strings = "n/a")
 # Recode sex from M/F to 0/1
 qtab.data <- qtab.data %>% mutate(sex_female = if_else(sex=="F", 1, 0))
 head(qtab.data %>% select(sex, sex_female))
@@ -45,29 +45,29 @@ qtab.data$Pair <- NA
 qtab.data$M <- NA
 
 length(qtab.fams) # 211 families
-for(i in 1:212){
+for(i in 1:211){
   famID <- qtab.fams[i]
   qtab.data[which(qtab.data$family_id==famID & !is.na(qtab.data$zyg)), "Pair"] <- paste0("Pair", i)
 }
 
-length(qtab.fams.MZ) #104 MZ families
-for(i in 1:104){
+length(qtab.fams.MZ) #111 MZ families
+for(i in 1:111){
   famID <- qtab.fams.MZ[i]
   qtab.data[which(qtab.data$family_id==famID & !is.na(qtab.data$zyg)), "M"] <- paste0("M", i)
 }
 
-length(qtab.fams.DZ) # 107 DZ families
-M.DZ.start <- 105 # 1 + number of MZ families
-M.DZ.end <- 318 # number of MZ families (104) + number of DZ twins (107*2). 104 + 214 = 318
+length(qtab.fams.DZ) # 100 DZ families
+M.DZ.start <- 112 # 1 + number of MZ families
+M.DZ.end <- 311 # number of MZ families (111) + number of DZ twins (100*2). 111 + 200 = 311
 qtab.data[which(qtab.data$family_id %in% qtab.fams.DZ  & !is.na(qtab.data$zyg)), "M"] <- paste0("M", M.DZ.start:M.DZ.end)
 
 head(qtab.data[, c("participant_id", "family_id", "zyg", "indID", "M", "Pair")], n = 30)
 
-ses01.cognition <- read.table("phenotype/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses01.cognition <- read.table("non-imaging_phenotypes/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
 ses01.cognition <- left_join(qtab.data, ses01.cognition, "participant_id")
 ses01.cognition <- ses01.cognition %>% rename(age_months = ses01_age_months)
 
-ses02.cognition <- read.table("phenotype/02_cognition_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
+ses02.cognition <- read.table("non-imaging_phenotypes/02_cognition_ses-02.tsv", sep = "\t", header = T, na.strings = "n/a")
 ses02.cognition <- left_join(qtab.data, ses02.cognition, "participant_id")
 ses02.cognition <- ses02.cognition %>% rename(age_months = ses02_age_months)
 
