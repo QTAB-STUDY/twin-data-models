@@ -35,34 +35,12 @@ qtab.data[which(qtab.data$family_id=="fam-0085"), c("participant_id", "birth_ord
 qtab.data[which(qtab.data$family_id=="fam-0210"), c("participant_id", "birth_order", "indID")]
 qtab.data[which(qtab.data$family_id=="fam-0217"), c("participant_id", "birth_order", "indID")]
 
-# Create Pair & M variables for linear-mixed models
+# Merge in Pair & M
 # See Visscher et al. (2004). The Use of Linear Mixed Models to Estimate Variance Components from Data on Twin Pairs by Maximum Likelihood
-qtab.data <- qtab.data %>% arrange(family_id)
-qtab.fams <- unique(qtab.data$family_id)
-qtab.fams.MZ <- unique(qtab.data[which(qtab.data$zyg<=2), "family_id"])
-qtab.fams.DZ <- unique(qtab.data[which(qtab.data$zyg>=3), "family_id"])
-qtab.data$Pair <- NA
-qtab.data$M <- NA
+Pair.M <- read_delim("qtab_Pair_M.txt")
+qtab.data <- left_join(qtab.data, Pair.M, "participant_id")
 
-length(qtab.fams) # 211 families
-for(i in 1:211){
-  famID <- qtab.fams[i]
-  qtab.data[which(qtab.data$family_id==famID & !is.na(qtab.data$zyg)), "Pair"] <- paste0("Pair", i)
-}
-
-length(qtab.fams.MZ) #111 MZ families
-for(i in 1:111){
-  famID <- qtab.fams.MZ[i]
-  qtab.data[which(qtab.data$family_id==famID & !is.na(qtab.data$zyg)), "M"] <- paste0("M", i)
-}
-
-length(qtab.fams.DZ) # 100 DZ families
-M.DZ.start <- 112 # 1 + number of MZ families
-M.DZ.end <- 311 # number of MZ families (111) + number of DZ twins (100*2). 111 + 200 = 311
-qtab.data[which(qtab.data$family_id %in% qtab.fams.DZ  & !is.na(qtab.data$zyg)), "M"] <- paste0("M", M.DZ.start:M.DZ.end)
-
-head(qtab.data[, c("participant_id", "family_id", "zyg", "indID", "M", "Pair")], n = 30)
-
+# Add phenotypes
 ses01.cognition <- read.table("non-imaging_phenotypes/02_cognition_ses-01.tsv", sep = "\t", header = T, na.strings = "n/a")
 ses01.cognition <- left_join(qtab.data, ses01.cognition, "participant_id")
 ses01.cognition <- ses01.cognition %>% rename(age_months = ses01_age_months)
