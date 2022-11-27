@@ -136,6 +136,7 @@ Saturated_covariate <- function(phenotype, twin.data) {
   #### Sub-models ####
   # MODELS TO TEST HETEROGENIETY OF MEANS
   # Constrain expected Means to be equal across twin/sibling order
+  # Not looking at DZOS due to small number of DZOS
   MModel1 <- twinSatModel
   MModel1 <- omxSetParameters(MModel1, label = c("mMZF1", "mMZF2"), newlabels = "mMZF")
   MModel1 <- omxSetParameters(MModel1, label = c("mMZM1", "mMZM2"), newlabels = "mMZM")

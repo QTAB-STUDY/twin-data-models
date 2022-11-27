@@ -1,11 +1,11 @@
-setwd("~/GitHub/twin-data-models")
+setwd("C:/GitHub/twin-data-models")
 rm(list = ls())
 
 # Load libraries
 library(tidyverse)
 
 #### Setup participants datafile ####
-qtab.participants <- read_delim("participants_restricted.tsv", delim = "\t",  na = "n/a")
+qtab.participants <- read_delim("non_imaging_phenotypes/participants_restricted.tsv", delim = "\t",  na = "n/a")
 # Recode sex from M/F to sex_female 0/1
 qtab.participants <- qtab.participants %>% mutate(sex_female = if_else(sex=="F", 1, 0))
 head(qtab.participants %>% select(sex, sex_female))
@@ -25,17 +25,22 @@ qtab.participants <- qtab.participants %>%
 select(qtab.participants %>% filter(family_id=="fam-0085"), c("participant_id", "birth_order", "indID"))
 select(qtab.participants %>% filter(family_id=="fam-0210"), c("participant_id", "birth_order", "indID"))
 select(qtab.participants %>% filter(family_id=="fam-0217"), c("participant_id", "birth_order", "indID"))
+# DZOS recode so females are 01, males are 02
+qtab.participants <- qtab.participants %>%                               
+  mutate(indID = replace(indID, zyg==5 & sex_female==1, 1))
+qtab.participants <- qtab.participants %>%                               
+  mutate(indID = replace(indID, zyg==5 & sex_female==0, 2))
 
 #### Session 01 data ####
-ses01.pub <- read_delim("phenotype/01_puberty_ses-01.tsv", delim = "\t", na = "n/a")
-ses01.cog <- read_delim("phenotype/02_cognition_ses-01.tsv", delim = "\t", na = "n/a")
-ses01.anxdep <- read_delim("phenotype/03_anxiety_depression_ses-01.tsv", delim = "\t", na = "n/a")
-ses01.emotsoc <- read_delim("phenotype/04_emot_soc_behav_ses-01.tsv", delim = "\t", na = "n/a")
-ses01.socsupp <- read_delim("phenotype/05_social_support_family_functioning_ses-01.tsv", delim = "\t", na = "n/a")
-ses01.stress <- read_delim("phenotype/06_stress_ses-01.tsv", delim = "\t", na = "n/a")
-ses01.sleep <- read_delim("phenotype/07_sleep_physical_health_ses-01.tsv", delim = "\t", na = "n/a")
-ses01.diet <- read_delim("phenotype/09_dietary_behaviour_ses-01.tsv", delim = "\t", na = "n/a")
-earlylifedemogs <- read_delim("phenotype/08_early_life_family_demographics.tsv", delim = "\t", na = "n/a")
+ses01.pub <- read_delim("non_imaging_phenotypes/01_puberty_ses-01.tsv", delim = "\t", na = "n/a")
+ses01.cog <- read_delim("non_imaging_phenotypes/02_cognition_ses-01.tsv", delim = "\t", na = "n/a")
+ses01.anxdep <- read_delim("non_imaging_phenotypes/03_anxiety_depression_ses-01.tsv", delim = "\t", na = "n/a")
+ses01.emotsoc <- read_delim("non_imaging_phenotypes/04_emot_soc_behav_ses-01.tsv", delim = "\t", na = "n/a")
+ses01.socsupp <- read_delim("non_imaging_phenotypes/05_social_support_family_functioning_ses-01.tsv", delim = "\t", na = "n/a")
+ses01.stress <- read_delim("non_imaging_phenotypes/06_stress_ses-01.tsv", delim = "\t", na = "n/a")
+ses01.sleep <- read_delim("non_imaging_phenotypes/07_sleep_physical_health_ses-01.tsv", delim = "\t", na = "n/a")
+ses01.diet <- read_delim("non_imaging_phenotypes/09_dietary_behaviour_ses-01.tsv", delim = "\t", na = "n/a")
+earlylifedemogs <- read_delim("non_imaging_phenotypes/08_early_life_family_demographics.tsv", delim = "\t", na = "n/a")
 
 qtab.data.ses01 <- left_join(qtab.participants, ses01.pub, "participant_id")
 qtab.data.ses01 <- left_join(qtab.data.ses01, ses01.cog, "participant_id")
