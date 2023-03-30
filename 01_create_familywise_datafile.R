@@ -14,17 +14,17 @@ qtab.participants$indID <- qtab.participants$birth_order
 # Maximise the twin dataset - recode pairs from triplets so that indID is 1 & 2 
 # (with 1 & 2 reflecting the relative birth order)
 qtab.participants <- qtab.participants %>%                               
-  mutate(indID = replace(indID, participant_id == "sub-0081", 2)) #fam-0085
+  mutate(indID = replace(indID, participant_id == "8IxEjY", 2))
 qtab.participants <- qtab.participants %>%                               
-  mutate(indID = replace(indID, participant_id == "sub-0386", 1)) #fam-0210
+  mutate(indID = replace(indID, participant_id == "LIPs0p", 1))
 qtab.participants <- qtab.participants %>%                               
-  mutate(indID = replace(indID, participant_id == "sub-0138", 2)) #fam-0210
+  mutate(indID = replace(indID, participant_id == "DPfWmQ", 2))
 qtab.participants <- qtab.participants %>%                               
-  mutate(indID = replace(indID, participant_id == "sub-0355", 2)) #fam-0217
+  mutate(indID = replace(indID, participant_id == "KQb9f9", 2))
 # Check that pairs now have indID 1 & 2
-select(qtab.participants %>% filter(family_id=="fam-0085"), c("participant_id", "birth_order", "indID"))
-select(qtab.participants %>% filter(family_id=="fam-0210"), c("participant_id", "birth_order", "indID"))
-select(qtab.participants %>% filter(family_id=="fam-0217"), c("participant_id", "birth_order", "indID"))
+select(qtab.participants %>% filter(family_id=="9vHiUW"), c("participant_id", "birth_order", "indID"))
+select(qtab.participants %>% filter(family_id=="CuoAOr"), c("participant_id", "birth_order", "indID"))
+select(qtab.participants %>% filter(family_id=="siiJJD"), c("participant_id", "birth_order", "indID"))
 # DZOS recode so females are 01, males are 02
 qtab.participants <- qtab.participants %>%                               
   mutate(indID = replace(indID, zyg==5 & sex_female==1, 1))
