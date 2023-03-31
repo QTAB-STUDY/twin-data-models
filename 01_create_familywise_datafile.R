@@ -60,6 +60,18 @@ for (i in ses.01.variable_list){
   qtab.data.ses01[, paste0(i, "Z")] <- as.numeric(scale(qtab.data.ses01[, i]))
 }
 
+# Add MRI data (use MRIQC as an example)
+# Need to merge the Zenodo and OpenNeuro IDs to match the imaging and non-imaging datasets
+id.master <- read.table("OpenNeuro_Zenodo_IDs.txt", sep = '\t', header = T)
+mriqc.ses01 <- read.table("mriqc/anat_ses-01_qc.tsv", sep = '\t', na = 'n/a', header = T)
+mriqc.ses01 <- left_join(mriqc.ses01, id.master, by=c('participant_id'='participant_id_OpenNeuro'))
+mriqc.ses01 <- 
+  mriqc.ses01 %>% select(-participant_id, -family_id_OpenNeuro)
+mriqc.ses01 <- 
+  mriqc.ses01 %>% rename(participant_id=participant_id_Zenodo,
+                         family_id=family_id_Zenodo)
+qtab.data.ses01 <- left_join(qtab.data.ses01, mriqc.ses01)
+
 ##### Convert to familywise dataset (i.e. one family per row) ####
 # _01 appended to twin 1, _02 appended to twin 2
 famData.ses01 <- reshape(as.data.frame(qtab.data.ses01), timevar = "indID", 
@@ -73,15 +85,15 @@ famData.ses01 %>% filter(is.na(zyg))
 saveRDS(famData.ses01, "QTAB_familywise_ses01.RDS")
 
 #### Session 02 data ####
-ses02.pub <- read_delim("phenotype/01_puberty_ses-02.tsv", delim = "\t", na = "n/a")
-ses02.cog <- read_delim("phenotype/02_cognition_ses-02.tsv", delim = "\t", na = "n/a")
-ses02.anxdep <- read_delim("phenotype/03_anxiety_depression_ses-02.tsv", delim = "\t", na = "n/a")
-ses02.emotsoc <- read_delim("phenotype/04_emot_soc_behav_ses-02.tsv", delim = "\t", na = "n/a")
-ses02.socsupp <- read_delim("phenotype/05_social_support_family_functioning_ses-02.tsv", delim = "\t", na = "n/a")
-ses02.stress <- read_delim("phenotype/06_stress_ses-02.tsv", delim = "\t", na = "n/a")
-ses02.sleep <- read_delim("phenotype/07_sleep_physical_health_ses-02.tsv", delim = "\t", na = "n/a")
-earlylifedemogs <- read_delim("phenotype/08_early_life_family_demographics.tsv", delim = "\t", na = "n/a")
-covid19 <- read_delim("phenotype/10_covid-19.tsv", delim = "\t", na = "n/a")
+ses02.pub <- read_delim("non_imaging_phenotypes/01_puberty_ses-02.tsv", delim = "\t", na = "n/a")
+ses02.cog <- read_delim("non_imaging_phenotypes/02_cognition_ses-02.tsv", delim = "\t", na = "n/a")
+ses02.anxdep <- read_delim("non_imaging_phenotypes/03_anxiety_depression_ses-02.tsv", delim = "\t", na = "n/a")
+ses02.emotsoc <- read_delim("non_imaging_phenotypes/04_emot_soc_behav_ses-02.tsv", delim = "\t", na = "n/a")
+ses02.socsupp <- read_delim("non_imaging_phenotypes/05_social_support_family_functioning_ses-02.tsv", delim = "\t", na = "n/a")
+ses02.stress <- read_delim("non_imaging_phenotypes/06_stress_ses-02.tsv", delim = "\t", na = "n/a")
+ses02.sleep <- read_delim("non_imaging_phenotypes/07_sleep_physical_health_ses-02.tsv", delim = "\t", na = "n/a")
+earlylifedemogs <- read_delim("non_imaging_phenotypes/08_early_life_family_demographics.tsv", delim = "\t", na = "n/a")
+covid19 <- read_delim("non_imaging_phenotypes/10_covid-19.tsv", delim = "\t", na = "n/a")
 
 qtab.data.ses02 <- left_join(qtab.participants, ses02.pub, "participant_id")
 qtab.data.ses02 <- left_join(qtab.data.ses02, ses02.cog, "participant_id")
