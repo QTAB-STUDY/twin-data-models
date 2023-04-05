@@ -60,16 +60,15 @@ for (i in ses.01.variable_list){
   qtab.data.ses01[, paste0(i, "Z")] <- as.numeric(scale(qtab.data.ses01[, i]))
 }
 
-# Add MRI data (use MRIQC as an example)
+# Add MRI data (use QC ratings as an example)
 # Need to merge the Zenodo and OpenNeuro IDs to match the imaging and non-imaging datasets
 id.master <- read.table("OpenNeuro_Zenodo_IDs.txt", sep = '\t', header = T)
-mriqc.ses01 <- read.table("mriqc/anat_ses-01_qc.tsv", sep = '\t', na = 'n/a', header = T)
+mriqc.ses01 <- read.table("visual_qc/anat_ses-01_qc.tsv", sep = '\t', na = 'n/a', header = T)
 mriqc.ses01 <- left_join(mriqc.ses01, id.master, by=c('participant_id'='participant_id_OpenNeuro'))
 mriqc.ses01 <- 
-  mriqc.ses01 %>% select(-participant_id, -family_id_OpenNeuro)
+  mriqc.ses01 %>% select(-participant_id)
 mriqc.ses01 <- 
-  mriqc.ses01 %>% rename(participant_id=participant_id_Zenodo,
-                         family_id=family_id_Zenodo)
+  mriqc.ses01 %>% rename(participant_id=participant_id_Zenodo)
 qtab.data.ses01 <- left_join(qtab.data.ses01, mriqc.ses01)
 
 ##### Convert to familywise dataset (i.e. one family per row) ####
