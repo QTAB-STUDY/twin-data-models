@@ -1,4 +1,4 @@
-setwd("~/GitHub/twin-data-models")
+setwd("C:/GitHub/twin-data-models")
 rm(list = ls())
 
 # Load libraries
