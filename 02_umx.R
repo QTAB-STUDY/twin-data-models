@@ -1,4 +1,5 @@
-setwd("~/Working/GitHub/twin-data-models")
+# setwd("~/Working/GitHub/twin-data-models")
+setwd("C:/GitHub/twin-data-models")
 rm(list = ls())
 
 # Load libraries
@@ -9,6 +10,7 @@ library(tidyverse)
 famData.ses01 <- readRDS("QTAB_familywise_ses01.RDS")
 mzData.ses01 <- famData.ses01 %>% filter(zyg == 1 | zyg == 2)
 dzData.ses01 <- famData.ses01 %>% filter(zyg == 3 | zyg == 4 | zyg == 5)
+umxSummarizeTwinData(data = famData.ses01, selVars = "SMFQ_score", sep = "_0", zyg = "zyg", age = "ses01_age_months", MZ = c(1,2), DZ = c(3,4,5))
 
 #### Variance-based ####
 # See Verhulst et al., 2019. https://doi.org/10.1007/s10519-018-9942-y
@@ -107,5 +109,3 @@ m1vc$top$A_std$result # 0.5078013
 m1vc.ADE$top$A_std$result # 0.5078013
 m1vc.ADE$top$C_std$result # 0.5078013
 m1vc.ADE$top$E_std$result # 0.5078013
-
-umxSummarizeTwinData(data = famData.ses01, selVars = "SMFQ_score", sep = "_0", zyg = "zyg", age = "ses01_age_months", MZ = c(1,2), DZ = c(3,4,5))
